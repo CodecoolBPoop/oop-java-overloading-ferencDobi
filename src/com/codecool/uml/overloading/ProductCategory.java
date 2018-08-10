@@ -1,20 +1,27 @@
 package com.codecool.uml.overloading;
 
-import java.util.LinkedList;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ProductCategory {
+    private static int lastId;
     private int id;
     private String name;
     private String department;
     private String description;
 
     public ProductCategory() {
-        // TODO
+        id = ++lastId;
     }
 
     public ProductCategory(String name, String department, String description) {
-        // TODO
+        this();
+        this.name = name;
+        this.department = department;
+        this.description = description;
     }
 
 
@@ -47,13 +54,23 @@ public class ProductCategory {
     }
 
     public List<Product> getProducts() {
-        // TODO
-        return new LinkedList<Product>();
+        return Product.getAllProductsBy(this);
     }
 
     @Override
     public String toString() {
-        // TODO
-        return super.toString();
+        Field[] fields = this.getClass().getDeclaredFields();
+        fields = Arrays.stream(fields).filter(field -> !Modifier.isStatic(field.getModifiers())).toArray(Field[]::new);
+        String[] fieldStrings = new String[fields.length];
+        int i = 0;
+        for (Field field : fields) {
+            field.setAccessible(true);
+            try {
+                fieldStrings[i++] = field.getName() + ":" + field.get(this);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return String.join(",", fieldStrings);
     }
 }

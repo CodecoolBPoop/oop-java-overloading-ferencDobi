@@ -1,8 +1,11 @@
 package com.codecool.uml.overloading;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Currency;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Product {
@@ -85,6 +88,7 @@ public class Product {
     @Override
     public String toString() {
         Field[] fields = this.getClass().getDeclaredFields();
+        fields = Arrays.stream(fields).filter(field -> !Modifier.isStatic(field.getModifiers())).toArray(Field[]::new);
         String[] fieldStrings = new String[fields.length];
         int i = 0;
         for (Field field : fields) {
