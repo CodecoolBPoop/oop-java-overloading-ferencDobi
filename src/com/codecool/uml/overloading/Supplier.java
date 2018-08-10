@@ -1,19 +1,22 @@
 package com.codecool.uml.overloading;
 
-import java.util.LinkedList;
+import java.lang.reflect.Field;
 import java.util.List;
 
 public class Supplier {
+    private static int lastId;
     private int id;
     private String name;
     private String description;
 
     public Supplier() {
-        // TODO
+        id = ++lastId;
     }
 
     public Supplier(String name, String description) {
-        // TODO
+        this();
+        this.name = name;
+        this.description = description;
     }
 
     public int getId() {
@@ -37,13 +40,22 @@ public class Supplier {
     }
 
     public List<Product> getProducts() {
-        // TODO
-        return new LinkedList<Product>();
+        return Product.getAllProductsBy(this);
     }
 
     @Override
     public String toString() {
-        // TODO
-        return super.toString();
+        Field[] fields = this.getClass().getDeclaredFields();
+        String[] fieldStrings = new String[fields.length];
+        int i = 0;
+        for (Field field : fields) {
+            field.setAccessible(true);
+            try {
+                fieldStrings[i++] = field.getName() + ":" + field.get(this);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return String.join(",", fieldStrings);
     }
 }

@@ -13,7 +13,7 @@ public class Product {
     private Currency defaultCurrency;
     private ProductCategory productCategory;
     private Supplier supplier;
-    private List<Product> productList;
+    private static List<Product> productList;
 
     public Product() {
         id = ++lastId;
@@ -70,13 +70,13 @@ public class Product {
         this.supplier = supplier;
     }
 
-    public List<Product> getAllProductsBy(ProductCategory productCategory) {
+    public static List<Product> getAllProductsBy(ProductCategory productCategory) {
         return productList.stream()
                           .filter(product -> product.getProductCategory().equals(productCategory))
                           .collect(Collectors.toList());
     }
 
-    public List<Product> getAllProductsBy(Supplier supplier) {
+    public static List<Product> getAllProductsBy(Supplier supplier) {
         return productList.stream()
                           .filter(product -> product.getSupplier().equals(supplier))
                           .collect(Collectors.toList());
