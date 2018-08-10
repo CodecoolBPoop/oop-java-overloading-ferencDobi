@@ -1,9 +1,12 @@
 package com.codecool.uml.overloading;
 
+import java.lang.reflect.Field;
 import java.util.Currency;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Product {
+    private static int lastId;
     private int id;
     private String name;
     private float defaultPrice;
@@ -13,11 +16,14 @@ public class Product {
     private List<Product> productList;
 
     public Product() {
-        // TODO
+        id = ++lastId;
     }
 
     public Product(String name, float defaultPrice, Currency defaultCurrency) {
-        // TODO
+        this();
+        this.name = name;
+        this.defaultPrice = defaultPrice;
+        this.defaultCurrency = defaultCurrency;
     }
 
     public int getId() {
@@ -65,18 +71,30 @@ public class Product {
     }
 
     public List<Product> getAllProductsBy(ProductCategory productCategory) {
-        // TODO
-        return productList;
+        return productList.stream()
+                          .filter(product -> product.getProductCategory().equals(productCategory))
+                          .collect(Collectors.toList());
     }
 
     public List<Product> getAllProductsBy(Supplier supplier) {
-        // TODO
-        return productList;
+        return productList.stream()
+                          .filter(product -> product.getSupplier().equals(supplier))
+                          .collect(Collectors.toList());
     }
 
     @Override
     public String toString() {
-        // TODO
-        return super.toString();
+        Field[] fields = this.getClass().getDeclaredFields();
+        String[] fieldStrings = new String[fields.length];
+        int i = 0;
+        for (Field field : fields) {
+            field.setAccessible(true);
+            try {
+                fieldStrings[i++] = field.getName() + ":" + field.get(this);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return String.join(",", fieldStrings);
     }
 }
