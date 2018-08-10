@@ -12,11 +12,11 @@ public class Product {
     private Supplier supplier;
     private List<Product> productList;
 
-    Product() {
+    public Product() {
         // TODO
     }
 
-    Product(String name, float defaultPrice, Currency defaultCurrency) {
+    public Product(String name, float defaultPrice, Currency defaultCurrency) {
         // TODO
     }
 
